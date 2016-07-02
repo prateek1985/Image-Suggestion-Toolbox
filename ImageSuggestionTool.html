@@ -1,0 +1,148 @@
+<html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<h1 align='center'> <b>Image Suggestion Tool</b></h1>
+
+<body style = "background-color:lightgray">
+<div id="Image" align='center'>
+<div>
+	</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="application/javascript">
+
+function displayImages(enTitle){
+  
+    enTitle = enTitle.split(" ")[0];
+    console.log(enTitle);
+        $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=&list=allimages&aisort=name&aifrom="+enTitle+"&aiprefix="+enTitle+"&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+                console.log(data);
+
+               $('#Image').empty();
+               for(var obj in data.query.allimages){
+                
+                 $('#Image').append("<img src='"+data.query.allimages[obj].url+"' alt='no image' height='100' width='100'><br>");
+                 $('#Image').append(data.query.allimages[obj].title+"<br><br>");
+             }
+
+        },
+        error: function (errorMessage) {
+        }
+    });
+}
+
+function displayImages2(value){
+    value = value.split(" ")[0];
+console.log(value);
+        $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=&list=allimages&aisort=name&aifrom="+value+"&aiprefix="+value+"&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+                console.log(data);
+
+               $('#Image').empty();
+               for(var obj in data.query.allimages){
+                
+                 $('#Image').append("<img src='"+data.query.allimages[obj].url+"' alt='no image' height='100' width='100'><br>");
+                 $('#Image').append(data.query.allimages[obj].title+"<br><br>");
+             }
+
+        },
+        error: function (errorMessage) {
+        }
+    });
+}
+
+function askTitle(value1){
+console.log(value1);
+
+    $.ajax({
+        type: "GET",
+        url: encodeURI("http://www.wikidata.org/w/api.php?action=wbgetentities&format=json&sites=mrwiki&titles="+value1+"&languages=en&utf8=1&ascii=1&callback=?"),
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+                console.log(data);
+            for(var Qval in data.entities){
+                console.log(Qval);
+                if(Qval != -1){
+                    
+                    enTitle = data.entities[Qval].labels.en.value;
+                   // alert(enTitle);
+                    displayImages(enTitle);
+                }
+                else{
+                   
+                 var letterNumber = /^[0-9a-zA-Z ]+$/;  
+                     if((value1.match(letterNumber)))   
+                        {
+                            displayImages(value1);
+                            break;
+                        }
+                        else{
+                            var title = prompt("Enter English titile: "+value1,"");
+                            if(title)
+                                displayImages2(title);
+                        }
+                
+                }
+            }
+
+        },
+        error: function (errorMessage) {
+        }
+    });
+
+ /* 
+$.getJSON('https://en.wikipedia.org/wiki/mumbai&callback', function(data) {
+     console.log(data);
+ });
+   */
+
+}
+$(document).ready(function(){
+
+    $.ajax({
+        type: "GET",
+        url: "https://mr.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&list=allpages&utf8=1&piprop=thumbnail%7Cname&pithumbsize=0&apfilterlanglinks=withlanglinks&aplimit=500&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+
+        $('#Image').append("<table style='background-color:red'>");
+            for(var obj in data.query.allpages)
+            {
+                var title  = data.query.allpages[obj].title.replace(/[']/g, '');
+                $('#Image').append("<tr>");
+                $('#Image').append("<td>");
+            	$('#Image').append("<b><a href='https://mr.wikipedia.org/?curid="+data.query.allpages[obj].pageid+"'>"+title+"</a></b>");
+                $('#Image').append("</td>");
+                 $('#Image').append("<td>");
+                $('#Image').append("<button class='btn btn-warning btn-sm' onClick = 'askTitle(value)' value = '"+title+"''>Suggest Image</button><br/><br/>");
+                 $('#Image').append("</td>");
+                 $('#Image').append("</tr>");
+            }
+            $('#Image').append("</table>"); 
+            //console.log(data);
+        },
+        error: function (errorMessage) {
+        }
+    });
+});
+</script>
+
+</html>
