@@ -1,0 +1,6 @@
+{
+  "name": "Image-suggestion-toolbox",
+  "tagline": "This web app is used to suggest images for marathi wikipedia page which contains very less or no image. The related images are fetched from the wikipedia. And the fetched images are suggested to user.",
+  "body": "# Image-Suggestion-Toolbox\r\nThis web app is used to suggest images for marathi wikipedia page which contains very less or no image.\r\nThe related images are fetched from the wikipedia. And the fetched images are suggested to user.\r\n\r\nCan be run in any browser just by loading the ImageSuggestionTool.html\r\nIt shows Marathi wikipedia titles which has no images and then clicking on suggest images will give you the suggested images.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
